@@ -1,7 +1,8 @@
 #!/bin/bash
 SECONDS=0
 
-cd $HOME/app
+# Update the directory path to match your server structure
+cd $HOME/rideshare-simulation/ride-share
 
 msg () {
   echo -e "$1\n--------------------\n"
@@ -17,7 +18,7 @@ msg "Building Go binary"
 go build -o app
 
 msg "Starting server"
-nohup sudo ./app &>/dev/null &
+SERVER_ENV=PROD nohup sudo ./app &>/dev/null &
 
 duration=$SECONDS
 
