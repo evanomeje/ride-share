@@ -37,10 +37,7 @@ func main() {
 	db.InitDB()
 	defer db.Connection.Close()
 
-	// Serve static files
 	http.Handle("/", http.FileServer(http.Dir("./static")))
-
-	// API endpoint
 	http.HandleFunc("/drivers", getDrivers)
 
 	serverEnv := os.Getenv("SERVER_ENV")
