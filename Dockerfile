@@ -7,7 +7,7 @@ COPY go.sum ./
 COPY *.go ./
 
 COPY postgres ./postgres
-COPY frontend ./frontend
+COPY frontend/build ./frontend/build
 
 RUN go build -o /main
 
