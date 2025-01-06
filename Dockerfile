@@ -10,6 +10,6 @@ COPY postgres ./postgres
 
 RUN go build -o /main
 
-EXPOSE 8080
+EXPOSE ${SERVER_PORT}
 
 CMD [ "/main" ]

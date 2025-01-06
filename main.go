@@ -34,22 +34,23 @@ func getDrivers(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	db.InitDB()
-	defer db.Connection.Close()
+    db.InitDB()
+    defer db.Connection.Close()
 
-	http.Handle("/", http.FileServer(http.Dir("./static")))
-	http.HandleFunc("/drivers", getDrivers)
+    http.Handle("/", http.FileServer(http.Dir("./static")))
+    http.HandleFunc("/drivers", getDrivers)
 
-	serverEnv := os.Getenv("SERVER_ENV")
+    serverEnv := os.Getenv("SERVER_ENV")
+    serverPort := os.Getenv("SERVER_PORT")
 
-	if serverEnv == "DEV" {
-		http.ListenAndServe(":8080", nil)
-	} else if serverEnv == "PROD" {
-		http.ListenAndServeTLS(
-			":443",
-			"/etc/letsencrypt/live/app.evanomeje.xyz/fullchain.pem",
-			"/etc/letsencrypt/live/app.evanomeje.xyz/privkey.pem",
-			nil,
-		)
-	}
+    if serverEnv == "DEV" {
+        http.ListenAndServe(fmt.Sprintf(":%s", serverPort), nil)
+    } else if serverEnv == "PROD" {
+        http.ListenAndServeTLS(
+            fmt.Sprintf(":%s", serverPort),
+            "/etc/letsencrypt/live/app.evanomeje.xyz/fullchain.pem",
+            "/etc/letsencrypt/live/app.evanomeje.xyz/privkey.pem",
+            nil,
+        )
+    }
 }
