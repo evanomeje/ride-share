@@ -1,6 +1,5 @@
 services:
   app:
-    build: .
     image: app
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
