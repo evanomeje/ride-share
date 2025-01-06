@@ -2,7 +2,7 @@ services:
   app:
     image: app
     ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
+      - ${SERVER_PORT}:${SERVER_PORT}
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
     environment:
