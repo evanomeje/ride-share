@@ -1,6 +1,6 @@
 #!/bin/bash
 cd frontend
-yard build
+yarn build
 cd ..
 git add .
 git commit -m "build: Updating frontend"
