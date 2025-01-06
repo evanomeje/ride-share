@@ -7,9 +7,10 @@ COPY go.sum ./
 COPY *.go ./
 COPY static ./static
 COPY postgres ./postgres
+COPY frontend ./frontend
 
 RUN go build -o /main
 
-EXPOSE ${SERVER_PORT}
+EXPOSE 8080
 
 CMD [ "/main" ]
