@@ -11,6 +11,6 @@ COPY frontend ./frontend
 
 RUN cd server && go build -o main
 
-EXPOSE ${SERVER_PORT}
+EXPOSE 8080
 
 CMD cd server && ./main
