@@ -9,6 +9,8 @@ COPY server ./server
 COPY db ./db
 COPY frontend ./frontend
 
+COPY dbconfig.json .
+
 RUN cd server && go build -o main
 
 EXPOSE ${SERVER_PORT}
