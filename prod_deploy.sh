@@ -1,4 +1,3 @@
-
 #!/bin/bash
 SECONDS=0
 
@@ -11,11 +10,11 @@ msg () {
 msg "Pulling from Github"
 git pull
 
-msg "Building the 'server' image"
-sudo docker build --tag server .
+msg "Building images"
+sudo docker compose build    # Better than single image build
 
 msg "Stopping containers"
-sudo docker compose down
+sudo docker compose down --remove-orphans    # Added flag for cleanup
 
 msg "Starting containers"
 sudo docker compose up -d
