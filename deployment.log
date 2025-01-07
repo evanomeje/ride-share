@@ -21,36 +21,4 @@ Find out more about deployment here:
 
   https://cra.link/deployment
 
-Done in 4.69s.
-[main 2357b51] build: Updating frontend
- 1 file changed, 24 insertions(+)
- create mode 100644 deployment.log
-To https://github.com/evanomeje/ride-share.git
-   8424929..2357b51  main -> main
-[!p[?3;4l[4l>[?1049h[22;0;0t[4l[?1h=[0m(B[1;29r[H[2J[H[2J-e 
-Pulling from Github
---------------------
-
-remote: Enumerating objects: 4, done.[K
-remote: Counting objects:  25% (1/4)[Kremote: Counting objects:  50% (2/4)[Kremote: Counting objects:  75% (3/4)[Kremote: Counting objects: 100% (4/4)[Kremote: Counting objects: 100% (4/4), done.[K
-remote: Compressing objects:  50% (1/2)[Kremote: Compressing objects: 100% (2/2)[Kremote: Compressing objects: 100% (2/2), done.[K
-remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0 (from 0)[K
-Unpacking objects:  33% (1/3)Unpacking objects:  66% (2/3)Unpacking objects: 100% (3/3)Unpacking objects: 100% (3/3), 599 bytes | 199.00 KiB/s, done.
-From https://github.com/evanomeje/ride-share
-   8424929..2357b51  main       -> origin/main
-Updating 8424929..2357b51
-Fast-forward
- deployment.log | 24 [32m++++++++++++++++++++++++[39m
- 1 file changed, 24 insertions(+)
- create mode 100644 deployment.log
--e 
-Building the 'server' image
---------------------
-
-[sudo] password for evan: 
-Sorry, try again.
-[sudo] password for evan: 
-sudo: 1 incorrect password attempt
-[?1l>[29;1H
-[?1049l[23;0;0t[screen is terminating]
-Connection to app.evanomeje.xyz closed.
+Done in 4.70s.
