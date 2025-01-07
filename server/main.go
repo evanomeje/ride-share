@@ -1,7 +1,7 @@
 package main
 
 import (
-	db "app/postgres"
+	db "app/db"
 	"fmt"
 	"net/http"
 	"os"
@@ -37,7 +37,7 @@ func main() {
 	db.InitDB()
 	defer db.Connection.Close()
 
-	http.Handle("/", http.FileServer(http.Dir("./frontend/build")))
+	http.Handle("/", http.FileServer(http.Dir("../frontend/build")))
 	http.HandleFunc("/drivers", getDrivers)
 
 	serverEnv := os.Getenv("SERVER_ENV")

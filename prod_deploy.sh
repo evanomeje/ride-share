@@ -1,3 +1,4 @@
+
 #!/bin/bash
 SECONDS=0
 
@@ -7,11 +8,11 @@ msg () {
   echo -e "\n$1\n--------------------\n"
 }
 
-msg "Pulling from GitHub"
+msg "Pulling from Github"
 git pull
 
-msg "Building the 'app' image"
-sudo docker build --tag app .
+msg "Building the 'server' image"
+sudo docker build --tag server .
 
 msg "Stopping containers"
 sudo docker compose down
