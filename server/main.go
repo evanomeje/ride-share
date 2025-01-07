@@ -2,37 +2,11 @@ package main
 
 import (
 	db "app/db"
-	"fmt"
+	"encoding/json"
+	_"log"
 	"net/http"
 	"os"
-	"encoding/json"
 )
-
-func getDrivers(w http.ResponseWriter, req *http.Request) {
-	rows, err := db.Connection.Query("SELECT name FROM drivers")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer rows.Close()
-
-	data := ""
-	for rows.Next() {
-		var name string
-		err = rows.Scan(&name)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(name)
-		data += fmt.Sprintf("%s ", name)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Fprintf(w, data)
-}
 
 type Ride struct {
 	Id       string `json:"id"`
@@ -68,7 +42,7 @@ func main() {
 	defer db.Connection.Close()
 
 	http.Handle("/", http.FileServer(http.Dir("../frontend/build")))
-	http.HandleFunc("/drivers", getDrivers)
+	//http.HandleFunc("/drivers", getDrivers)
 	http.HandleFunc("/rides", getRides)
 
 	serverEnv := os.Getenv("SERVER_ENV")
