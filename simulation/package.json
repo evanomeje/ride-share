@@ -2,5 +2,8 @@
   "name": "simulation",
   "version": "1.0.0",
   "main": "main.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "pg": "^8.11.3"
+  }
 }
