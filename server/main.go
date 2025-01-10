@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/rs/cors"
 )
 
 type Ride struct {
@@ -38,23 +40,44 @@ func getRides(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	// Initialize the database connection
 	db.InitDB()
 	defer db.Connection.Close()
 
-	http.Handle("/", http.FileServer(http.Dir("../frontend/build")))
-	http.HandleFunc("/rides", getRides)
+	// Create a new ServeMux (router)
+	mux := http.NewServeMux()
 
+	// Serve the frontend build files
+	mux.Handle("/", http.FileServer(http.Dir("../frontend/build")))
+
+	// Add the /rides endpoint
+	mux.HandleFunc("/rides", getRides)
+
+	// Configure CORS
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedMethods:   []string{"GET"},
+		AllowedHeaders:   []string{"Content-Type"},
+		AllowCredentials: true,
+	})
+
+	// Wrap the ServeMux with the CORS middleware
+	handler := c.Handler(mux)
+
+	// Start the server
 	serverEnv := os.Getenv("SERVER_ENV")
 
 	if serverEnv == "DEV" {
-		log.Fatal(http.ListenAndServe(":8080", nil))
+		log.Println("Server running in development mode on http://localhost:8080")
+		log.Fatal(http.ListenAndServe(":8080", handler))
 	} else if serverEnv == "PROD" {
+		log.Println("Server running in production mode on https://app.evanomeje.xyz")
 		log.Fatal(
 			http.ListenAndServeTLS(
 				":443",
 				"/etc/letsencrypt/live/app.evanomeje.xyz/fullchain.pem",
 				"/etc/letsencrypt/live/app.evanomeje.xyz/privkey.pem",
-				nil,
+				handler,
 			),
 		)
 	}
