@@ -3,7 +3,7 @@ package main
 import (
 	db "app/db"
 	"encoding/json"
-	_"log"
+	"log"
 	"net/http"
 	"os"
 )
@@ -42,19 +42,20 @@ func main() {
 	defer db.Connection.Close()
 
 	http.Handle("/", http.FileServer(http.Dir("../frontend/build")))
-	//http.HandleFunc("/drivers", getDrivers)
 	http.HandleFunc("/rides", getRides)
 
 	serverEnv := os.Getenv("SERVER_ENV")
 
 	if serverEnv == "DEV" {
-		http.ListenAndServe(":8080", nil)
+		log.Fatal(http.ListenAndServe(":8080", nil))
 	} else if serverEnv == "PROD" {
-		http.ListenAndServeTLS(
-			":443",
-			"/etc/letsencrypt/live/app.evanomeje.xyz/fullchain.pem",
-			"/etc/letsencrypt/live/app.evanomeje.xyz/privkey.pem",
-			nil,
+		log.Fatal(
+			http.ListenAndServeTLS(
+				":443",
+				"/etc/letsencrypt/live/app.evanomeje.xyz/fullchain.pem",
+				"/etc/letsencrypt/live/app.evanomeje.xyz/privkey.pem",
+				nil,
+			),
 		)
 	}
 }
