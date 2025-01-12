@@ -1,3 +1,4 @@
+
 export const isBetween = (val, curr, prev) => (
   (val <= curr && val >= prev)
   ||
