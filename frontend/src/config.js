@@ -1,1 +1,1 @@
-/home/chima/FINAL-RIDESHARE/app/_config/config.js
+../../shared/config.js

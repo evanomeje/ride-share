@@ -1,1 +1,1 @@
-/home/chima/FINAL-RIDESHARE/app/_config/obstacles.js
+../../shared/obstacles.js
