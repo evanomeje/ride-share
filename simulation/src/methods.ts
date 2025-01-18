@@ -1,3 +1,4 @@
+
 import obstacles from '../../shared/obstacles.js';
 import { getRandomInt } from '../../shared/utils.js';
 import config from '../../shared/config.js';
@@ -39,7 +40,9 @@ export const getRoadNodes = (): CoordPair[] => {
     }
   }
 
-  return roadNodes;
+  return roadNodes.filter(([x, y]: CoordPair) => {
+    return x !== 0 && x !== gridCount - 1 && y !== 0 && y !== gridCount - 1;
+  });
 };
 
 export const buildGraph = (
@@ -75,7 +78,7 @@ export const getClosestRoadNode = (
   y: number,
   graph: Graph
 ): CoordPair => {
-  const isValid = (y: number, x: number) =>
+  const isValid = (y, x) =>
     y > 0 && y < graph.length - 1 && x > 0 && x < graph[y].length - 1;
 
   if (isValid(y, x) && graph[y][x] === 1) return [x, y];
@@ -109,9 +112,6 @@ export const getClosestRoadNode = (
     }
     queue = nextQueue;
   }
-
-  // Default return statement
-  return [x, y]; // Return the original coordinates if no valid road node is found
 };
 
 export const generateDestination = (coordPair: CoordPair): CoordPair => {
@@ -127,4 +127,13 @@ export const generateDestination = (coordPair: CoordPair): CoordPair => {
   let destination = getClosestRoadNode(destX, destY, graph);
 
   return destination;
+};
+
+export const getStraightLineDistance = (
+  coordsA: CoordPair,
+  coordsB: CoordPair
+): number => {
+  const [xA, yA] = coordsA;
+  const [xB, yB] = coordsB;
+  return Math.sqrt(Math.pow(xB - xA, 2) + Math.pow(yB - yA, 2));
 };

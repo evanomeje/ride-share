@@ -1,20 +1,16 @@
 import { wait } from '../../shared/utils.js';
-import { generateDestination, getGraph, } from './methods.js';
-const graph = getGraph();
+import { generateDestination } from './methods.js';
 const queue = [];
-process.on('message', ({ name, location }) => {
-    queue.push({ name, location });
+process.on('message', ({ customerId, location }) => {
+    queue.push({ customerId, location });
 });
 const main = async () => {
     while (true) {
         if (queue.length) {
-            const message = queue.shift();
-            if (message) {
-                const { name, location } = message;
-                const [x, y] = location;
-                let [destX, destY] = generateDestination([x, y]);
-                process.send?.({ name, destination: [destX, destY] });
-            }
+            const { customerId, location } = queue.shift();
+            const [x, y] = location;
+            let [destX, destY] = generateDestination([x, y]);
+            process.send({ customerId, destination: [destX, destY] });
         }
         if (queue.length)
             continue;

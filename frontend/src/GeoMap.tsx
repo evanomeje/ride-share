@@ -1,11 +1,12 @@
+
 import { useState, useEffect, useRef } from 'react';
 import Car from './Car';
-//@ts-ignore 
+//@ts-ignore
 import obstacles from '../../shared/obstacles';
 import { api } from './api';
-//@ts-ignore 
+//@ts-ignore
 import { wait } from '../../shared/utils';
-//@ts-ignore 
+//@ts-ignore
 import config from '../../shared/config';
 import CustomerIcon from './CustomerIcon';
 import DestIcon from './DestIcon';
@@ -14,12 +15,12 @@ const { gridSize, squareSize, fetchInterval } = config;
 
 const obstaclesMap = (() => {
   const obstaclesMap = new Map();
-  //@ts-ignore 
+  //@ts-ignore
   obstacles.forEach(([xStart, xEnd, yStart, yEnd, color]) => {
-    let x = Number(xStart);
-    while (x <= Number(xEnd)) {
-      let y = Number(yStart);
-      while (y <= Number(yEnd)) {
+    let x = xStart;
+    while (x <= xEnd) {
+      let y = yStart;
+      while (y <= yEnd) {
         obstaclesMap.set(`${x}:${y}`, color || '#c1c3c7');
         y += 1;
       }
@@ -29,19 +30,10 @@ const obstaclesMap = (() => {
   return obstaclesMap;
 })();
 
-interface Customer {
-  location: string;
-  destination: string;
-  // Add other properties if necessary
-}
-
-const loadData = async (
-  previousUpdateAtRef: React.MutableRefObject<number>,
-  setCars: React.Dispatch<React.SetStateAction<any[]>>,
-  setRefreshing: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+//@ts-ignore
+const loadData = async (previousUpdateAtRef, setCars, setRefreshing) => {
   while (true) {
-    const rides = await api.get('/rides');
+    const drivers = await api.get('/drivers');
 
     const timeout = 2000;
     const now = Date.now();
@@ -55,12 +47,12 @@ const loadData = async (
     previousUpdateAtRef.current = now;
 
     const cars = [];
-    for (const ride of rides) {
-      const { car_id, location } = ride;
+    for (const ride of drivers) {
+      const { driverId, location } = ride;
       const path = JSON.parse(ride.path) as [number, number][];
       const [x, y] = location.split(':');
       cars.push({
-        id: car_id,
+        id: driverId,
         path: path,
         actual: [parseInt(x), parseInt(y)],
       });
@@ -72,9 +64,9 @@ const loadData = async (
   }
 };
 
-const loadCustomers = async (
-  setCustomers: React.Dispatch<React.SetStateAction<Customer[]>>
-) => {
+//@ts-ignore
+
+const loadCustomers = async (setCustomers) => {
   while (true) {
     const customers = await api.get('/customers');
     setCustomers(customers);
@@ -85,8 +77,8 @@ const loadCustomers = async (
 const GeoMap = () => {
   const previousUpdateAtRef = useRef(Date.now());
 
-  const [cars, setCars] = useState<any[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [cars, setCars] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -104,8 +96,8 @@ const GeoMap = () => {
         key={`${x}:${y}`}
         width={squareSize}
         height={squareSize}
-        x={Number(x) * squareSize}
-        y={Number(y) * squareSize}
+        x={x * squareSize}
+        y={y * squareSize}
         fill={color}
         stroke={color}
         // onClick={() => console.log(`${x}:${y}`)}
@@ -118,23 +110,25 @@ const GeoMap = () => {
   });
 
   const customerElems = customers.map(({ location }) => {
+    //@ts-ignore
     const [x, y] = location.split(':');
     return (
       <CustomerIcon
         key={`${x}:${y}`}
-        x={Number(x) * squareSize - squareSize / 2}
-        y={Number(y) * squareSize - squareSize / 2}
+        x={x * squareSize - squareSize / 2}
+        y={y * squareSize - squareSize / 2}
       />
     );
   });
 
   const destElems = customers.map(({ destination }) => {
+    //@ts-ignore
     const [x, y] = destination.split(':');
     return (
       <DestIcon
         key={`${x}:${y}`}
-        x={Number(x) * squareSize - squareSize / 5}
-        y={Number(y) * squareSize - squareSize / 2 - 8}
+        x={x * squareSize - squareSize / +5}
+        y={y * squareSize - squareSize / 2 - 8}
       />
     );
   });
@@ -157,5 +151,4 @@ const GeoMap = () => {
     </div>
   );
 };
-
 export default GeoMap;

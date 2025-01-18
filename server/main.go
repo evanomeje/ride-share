@@ -10,45 +10,48 @@ import (
 	"github.com/rs/cors"
 )
 
-type Ride struct {
+type Driver struct {
 	Id       string `json:"id"`
-	CarId    string `json:"car_id"`
+	DriverId string `json:"driverId"`
 	Location string `json:"location"`
 	Path     string `json:"path"`
 }
 
 type Customer struct {
 	Id          string `json:"id"`
+	CustomerId  string `json:"customerId"`
 	Name        string `json:"name"`
 	Active      bool   `json:"active"`
 	Location    string `json:"location"`
 	Destination string `json:"destination"`
 }
 
-func getRides(w http.ResponseWriter, req *http.Request) {
-	rows, err := db.Connection.Query("SELECT * FROM rides")
+func getDrivers(w http.ResponseWriter, req *http.Request) {
+	rows, err := db.Connection.Query("SELECT id, driver_id, location, path FROM drivers")
 	if err != nil {
-		http.Error(w, "Failed to get rides: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Failed to get drivers: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
-	var rides []Ride
+	var drivers []Driver
 
 	for rows.Next() {
-		var ride Ride
-		rows.Scan(&ride.Id, &ride.CarId, &ride.Location, &ride.Path)
-		rides = append(rides, ride)
+		var driver Driver
+		rows.Scan(&driver.DriverId, &driver.Id, &driver.Location, &driver.Path)
+		drivers = append(drivers, driver)
 	}
 
-	ridesBytes, _ := json.MarshalIndent(rides, "", "\t")
+	ridesBytes, _ := json.MarshalIndent(drivers, "", "\t")
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(ridesBytes)
 }
 
 func getCustomers(w http.ResponseWriter, req *http.Request) {
-	rows, err := db.Connection.Query("SELECT * FROM customers where active = true")
+	rows, err := db.Connection.Query(
+		"SELECT id, customer_id, name, active, location, destination FROM customers where active = true",
+	)
 	if err != nil {
 		http.Error(w, "Failed to get customers: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -61,6 +64,7 @@ func getCustomers(w http.ResponseWriter, req *http.Request) {
 		var customer Customer
 		rows.Scan(
 			&customer.Id,
+			&customer.CustomerId,
 			&customer.Name,
 			&customer.Active,
 			&customer.Location,
@@ -87,7 +91,7 @@ func main() {
 	mux.Handle("/", http.FileServer(http.Dir("../frontend/build")))
 
 	// Add the /rides endpoint
-	mux.HandleFunc("/rides", getRides)
+	mux.HandleFunc("/drivers", getDrivers)
 
 	mux.HandleFunc("/customers", getCustomers)
 

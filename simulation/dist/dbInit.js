@@ -1,4 +1,5 @@
 import fs from 'fs';
+//@ts-ignore
 import pg from 'pg';
 import { wait } from '../../shared/utils.js';
 let retries = 3;
@@ -17,12 +18,7 @@ export default async function dbInit() {
                 return;
             }
             catch (err) {
-                if (err instanceof Error) {
-                    console.error(`Connection error: ${err.stack}`);
-                }
-                else {
-                    console.error(`Connection error: ${JSON.stringify(err)}`);
-                }
+                console.error(`Connection error: ${JSON.stringify(err.stack)}`);
             }
             retries--;
             console.log(`Connection failed, retries remaining: ${retries}`);

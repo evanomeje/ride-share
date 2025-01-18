@@ -1,7 +1,7 @@
 
 import React from 'react';
 import CarIcon from './CarIcon';
-//@ts-ignore 
+//@ts-ignore
 import { wait } from '../../shared/utils';
 import {
   advanceCoord,
@@ -10,7 +10,7 @@ import {
   getRotation,
   getTurnDistance,
 } from './movement';
-//@ts-ignore 
+//@ts-ignore
 import config from '../../shared/config';
 
 const {
@@ -40,7 +40,7 @@ export default class Car extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const { path, actual } = props;
-
+    console.log(path);
     let pathIndex = path.findIndex(([x, y]) => {
       return x === actual[0] && y === actual[1];
     });
