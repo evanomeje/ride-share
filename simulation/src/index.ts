@@ -2,13 +2,14 @@
 import g from './global.js';
 import Customer from './Customer.js';
 import Driver from './Driver.js';
-import { CoordPair } from './types.js';
+//@ts-ignore
+import { CoordPair, Path } from './types.js';
 import { drivers, customers } from './data.js';
 
 const main = async () => {
   await g.init();
 
-  const { db, getDestination, dispatcher } = g;
+  const { db, getDestination, dispatcher, routePlanner } = g;
 
   await db.query('DELETE FROM drivers;');
   await db.query('DELETE FROM customers;');
@@ -42,9 +43,24 @@ const main = async () => {
 
   dispatcher.on(
     'message',
-    ({ customerId, driverId }: { customerId: string; driverId: string }) => {
+    ({
+      customerId,
+      driverId,
+      location,
+    }: {
+      customerId: string;
+      driverId: string;
+      location: CoordPair;
+    }) => {
       customerInstances[customerId].handleDispatcherResult(driverId);
-      driverInstances[driverId].handleDispatcherResult(customerId);
+      driverInstances[driverId].handleDispatcherResult(customerId, location);
+    }
+  );
+
+  routePlanner.on(
+    'message',
+    ({ driverId, path }: { driverId: string; path: Path }) => {
+      driverInstances[driverId].handleRoutePlannerResult(path);
     }
   );
 };

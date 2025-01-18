@@ -30,6 +30,7 @@ const obstaclesMap = (() => {
   return obstaclesMap;
 })();
 
+
 //@ts-ignore
 const loadData = async (previousUpdateAtRef, setCars, setRefreshing) => {
   while (true) {
@@ -47,14 +48,15 @@ const loadData = async (previousUpdateAtRef, setCars, setRefreshing) => {
     previousUpdateAtRef.current = now;
 
     const cars = [];
-    for (const ride of drivers) {
-      const { driverId, location } = ride;
-      const path = JSON.parse(ride.path) as [number, number][];
+    for (const driver of drivers) {
+      const { driverId, pathIndex, location } = driver;
+      const path = JSON.parse(driver.path) as [number, number][];
       const [x, y] = location.split(':');
       cars.push({
         id: driverId,
-        path: path,
         actual: [parseInt(x), parseInt(y)],
+        path,
+        pathIndex,
       });
     }
 
@@ -65,7 +67,6 @@ const loadData = async (previousUpdateAtRef, setCars, setRefreshing) => {
 };
 
 //@ts-ignore
-
 const loadCustomers = async (setCustomers) => {
   while (true) {
     const customers = await api.get('/customers');
@@ -109,6 +110,25 @@ const GeoMap = () => {
     return <Car key={id} actual={actual} path={path} />;
   });
 
+  const pathElems = cars.map(({ path, pathIndex }) => {
+    //@ts-ignore
+    return path.slice(pathIndex).map((coordPair) => {
+      const [x, y] = coordPair;
+      return (
+        <circle
+          key={`${x}:${y}`}
+          width={squareSize / 4}
+          height={squareSize / 4}
+          r={squareSize / 6}
+          cx={x * squareSize + squareSize / 2}
+          cy={y * squareSize + squareSize / 2}
+          fill={'gray'}
+          stroke={'gray'}
+        />
+      );
+    });
+  });
+
   const customerElems = customers.map(({ location }) => {
     //@ts-ignore
     const [x, y] = location.split(':');
@@ -143,6 +163,7 @@ const GeoMap = () => {
           viewBox={`0 0 ${gridSize} ${gridSize}`}
         >
           {obstacleElems}
+          {pathElems}
           {carElems}
           {customerElems}
           {destElems}
