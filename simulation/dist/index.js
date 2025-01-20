@@ -4,7 +4,7 @@ import Driver from './Driver.js';
 import { drivers, customers } from './data.js';
 const main = async () => {
     await g.init();
-    const { db, getDestination, dispatcher } = g;
+    const { db, getDestination, dispatcher, routePlanner } = g;
     await db.query('DELETE FROM drivers;');
     await db.query('DELETE FROM customers;');
     // Simulate drivers
@@ -20,9 +20,12 @@ const main = async () => {
     getDestination.on('message', ({ customerId, destination, }) => {
         customerInstances[customerId].handleDestinationResult(destination);
     });
-    dispatcher.on('message', ({ customerId, driverId }) => {
+    dispatcher.on('message', ({ customerId, driverId, location, }) => {
         customerInstances[customerId].handleDispatcherResult(driverId);
-        driverInstances[driverId].handleDispatcherResult(customerId);
+        driverInstances[driverId].handleDispatcherResult(customerId, location);
+    });
+    routePlanner.on('message', ({ driverId, path }) => {
+        driverInstances[driverId].handleRoutePlannerResult(path);
     });
 };
 main();

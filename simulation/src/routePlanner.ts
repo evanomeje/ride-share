@@ -23,6 +23,7 @@ const main = async () => {
     if (queue.length) {
       const { driverId, startingPosition, destination } = queue.shift();
       let path = getShortestPath(startingPosition, destination);
+
       process.send({ driverId, path });
     }
 

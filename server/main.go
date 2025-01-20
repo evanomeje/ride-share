@@ -13,8 +13,12 @@ import (
 type Driver struct {
 	Id       string `json:"id"`
 	DriverId string `json:"driverId"`
+	Name        string `json:"name"`
+	Status 		  string `json:"status"`
 	Location string `json:"location"`
 	Path     string `json:"path"`
+	PathIndex int `json:"pathIndex"`
+	CustomerId string `json:"customerId"`
 }
 
 type Customer struct {
@@ -24,10 +28,23 @@ type Customer struct {
 	Active      bool   `json:"active"`
 	Location    string `json:"location"`
 	Destination string `json:"destination"`
+	DriverId    string `json:"driverId"`
 }
 
 func getDrivers(w http.ResponseWriter, req *http.Request) {
-	rows, err := db.Connection.Query("SELECT id, driver_id, location, path FROM drivers")
+	rows, err := db.Connection.Query(`
+		SELECT
+			id,
+			driver_id,
+			name, 
+			status, 
+			location,
+			path,
+			path_index,
+			customer_id 
+		FROM drivers
+		`,
+	)
 	if err != nil {
 		http.Error(w, "Failed to get drivers: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -38,7 +55,16 @@ func getDrivers(w http.ResponseWriter, req *http.Request) {
 
 	for rows.Next() {
 		var driver Driver
-		rows.Scan(&driver.DriverId, &driver.Id, &driver.Location, &driver.Path)
+		rows.Scan(
+			&driver.Id,
+			&driver.DriverId,
+			&driver.Name,
+			&driver.Status,
+			&driver.Location,
+			&driver.Path,
+			&driver.PathIndex,
+			&driver.CustomerId,
+		)
 		drivers = append(drivers, driver)
 	}
 
@@ -49,8 +75,20 @@ func getDrivers(w http.ResponseWriter, req *http.Request) {
 }
 
 func getCustomers(w http.ResponseWriter, req *http.Request) {
-	rows, err := db.Connection.Query(
-		"SELECT id, customer_id, name, active, location, destination FROM customers where active = true",
+	rows, err := db.Connection.Query(`
+		SELECT 
+			id, 
+			customer_id, 
+			name, 
+			active, 
+			location, 
+			destination, 
+			driver_id 
+		FROM customers WHERE
+		active = true AND 
+		driver_id IS NULL AND 
+		(location IS NOT NULL AND location != 'null') 
+		`,
 	)
 	if err != nil {
 		http.Error(w, "Failed to get customers: "+err.Error(), http.StatusInternalServerError)
@@ -69,6 +107,7 @@ func getCustomers(w http.ResponseWriter, req *http.Request) {
 			&customer.Active,
 			&customer.Location,
 			&customer.Destination,
+			&customer.DriverId,
 		)
 		customers = append(customers, customer)
 	}
