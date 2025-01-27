@@ -1,6 +1,5 @@
 
 import g from './global.js';
-import Customer from './Customer.js';
 import { CoordPair, Path } from './types.js';
 
 const main = async () => {

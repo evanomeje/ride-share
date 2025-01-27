@@ -1,31 +1,55 @@
+
 services:
   server:
     image: server
     build:
       context: .
-      dockerfile: server/Dockerfile
+      dockerfile: ./server/Dockerfile
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
+      - ./.env:/app/.env
     environment:
       SERVER_ENV: ${SERVER_ENV}
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 100M
   simulation:
     build:
       context: .
-      dockerfile: simulation/Dockerfile
-    restart: on-failure
+      dockerfile: ./simulation/Dockerfile
     volumes:
-      - ./shared:/app/shared
+      - ./.env:/app/.env
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 200M
   db:
     image: postgres:15.1-alpine
     ports:
       - 5432:5432
     volumes:
-      - app-db:/var/lib/postgresql/data
+      - rides-db:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command:
+      - "-c"
+      - "shared_buffers=64MB"
+      - "-c"
+      - "effective_cache-size=64MB"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 300M
 
 volumes:
-  app-db:
+  rides-db:
     external: true

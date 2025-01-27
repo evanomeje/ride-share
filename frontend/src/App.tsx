@@ -1,24 +1,17 @@
-
-import GeoMap from './GeoMap';
+import { Outlet } from 'react-router';
+import Nav from './Nav';
+import Bio from './Bio';
+import '../assets/css/all.min.css';
 
 const App = () => {
   return (
     <div className="App">
-      <GeoMap />
-      <div className="description">
-      <p className="mt-6 space-y-7 text-sm text-black">
-          <em>Rides</em>
-          &nbsp;is my take on building and visualizing a distributed system.
-          Read more @
-          <a
-            className="text-blue-500 hover:text-blue-600 transition-colors"
-            href="https://evanomeje.xyz"
-            target="_blank"
-            rel="noreferrer"
-          >
-            &nbsp;evanomeje.xyz
-          </a>
-        </p>
+      <aside className="p-2 border-r-2 border-slate-200 relative">
+        <Nav />
+        <Bio />
+      </aside>
+      <div className="content">
+        <Outlet />
       </div>
     </div>
   );

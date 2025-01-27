@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,13 +8,51 @@ code {
 }
 
 .App {
-  height: 100%;
+  height: 100vh;
   display: flex;
-  flex-direction: row-reverse;
-  color: black;
 }
 
-.description {
+aside {
+  width: 300px;
+}
+
+.bio {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100px;
+  display: flex;
+}
+
+.bio-left {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 10px;
+}
+
+.bio-right {
+  padding-right: 30px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  width: 100%;
+}
+
+.view-map {
+  flex: 1;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.view-map .description {
+  position: relative;
   flex: 1;
   display: flex;
   justify-content: center;
@@ -25,7 +62,8 @@ code {
   margin: 0 40px;
 }
 
-.map {
+.view-map .map {
+  position: relative;
   border: solid 0.5px lightgray;
   flex: 0 0 auto;
   width: 100vh;
@@ -49,4 +87,12 @@ code {
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 1000;
+}
+
+#error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }

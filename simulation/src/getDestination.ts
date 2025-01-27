@@ -1,4 +1,3 @@
-
 import { wait } from '../../shared/utils.js';
 import { generateDestination } from './methods.js';
 import { CoordPair } from './types.js';

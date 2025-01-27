@@ -1,4 +1,3 @@
-
 const shapes = `
   <g id="SVGRepo_bgCarrier" stroke-width="0" transform="translate(4.199999999999999,4.199999999999999), scale(0.85)">
   <rect x="0" y="0" width="56.00" height="56.00" rx="28" fill="#ffffff" strokewidth="0"/>
