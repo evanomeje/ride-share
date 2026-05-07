@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -12,13 +11,13 @@ import (
 )
 
 type Driver struct {
-	Id       string `json:"id"`
-	DriverId string `json:"driverId"`
-	Name        string `json:"name"`
-	Status 		  string `json:"status"`
-	Location string `json:"location"`
-	Path     string `json:"path"`
-	PathIndex int `json:"pathIndex"`
+	Id         string `json:"id"`
+	DriverId   string `json:"driverId"`
+	Name       string `json:"name"`
+	Status     string `json:"status"`
+	Location   string `json:"location"`
+	Path       string `json:"path"`
+	PathIndex  int    `json:"pathIndex"`
 	CustomerId string `json:"customerId"`
 }
 
@@ -127,12 +126,16 @@ func main() {
 	// Create a new ServeMux (router)
 	mux := http.NewServeMux()
 
-	// Serve the frontend build files
-	mux.Handle("/", http.FileServer(http.Dir("../frontend/build")))
+	// Serve static files (CSS, JS, images)
+	mux.Handle("/static/", http.FileServer(http.Dir("../frontend/build")))
 
-	// Add the /rides endpoint
+	// For all other routes, serve index.html (SPA fallback)
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "../frontend/build/index.html")
+	})
+
+	// Add the API endpoints
 	mux.HandleFunc("/drivers", getDrivers)
-
 	mux.HandleFunc("/customers", getCustomers)
 
 	// Configure CORS
