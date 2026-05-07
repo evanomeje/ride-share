@@ -11,7 +11,7 @@ export default async function dbInit() {
         const { Client } = pg;
         const db = new Client({
             host: POSTGRES_HOST,
-            port: Number(POSTGRES_PORT),
+            port: POSTGRES_PORT ? Number(POSTGRES_PORT) : 5432,
             user: POSTGRES_USER,
             password: POSTGRES_PASSWORD,
             database: POSTGRES_DBNAME,
